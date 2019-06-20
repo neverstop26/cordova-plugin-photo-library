@@ -361,7 +361,7 @@ public class PhotoLibraryService {
             JSONObject columnsVideos = new JSONObject() {{
                 put("int.id", MediaStore.Video.VideoColumns._ID);
                 put("fileName", MediaStore.MediaColumns.DISPLAY_NAME);
-                put("videoThumbnail", MediaStore.MediaColumns.DISPLAY_NAME);
+                put("thumbnailURL", MediaStore.MediaColumns.DISPLAY_NAME);
                 put("nativeURL", MediaStore.MediaColumns.DATA); // will not be returned to javascript
 
             }};
@@ -376,7 +376,7 @@ public class PhotoLibraryService {
                                 queryResult.get("nativeURL"));
 
                 Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(queryResult.getString("nativeURL"), MediaStore.Video.Thumbnails.MINI_KIND);
-                queryResult.put("videoThumbnail",bitmapToUriConverter(context,bitmap));
+                queryResult.put("thumbnailURL",bitmapToUriConverter(context,bitmap));
                 queryResult.put("isVideo", true);
 
                 chunk.add(queryResult);
