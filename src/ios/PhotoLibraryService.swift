@@ -146,17 +146,17 @@ final class PhotoLibraryService {
                 
                 let semaphore = DispatchSemaphore(value: 0)
                 
-                let libraryItem = self.assetToLibraryItem(asset: asset, useOriginalFileNames: false, includeAlbumData: false);
-                
+                let libraryItem = self.assetToLibraryItem(asset: asset, useOriginalFileNames: false, includeAlbumData: false, includeVideos : true);
+
                 self.getCompleteInfo(libraryItem, completion: { (fullPath, libraryItemOrigin) in
                     libraryItem["filePath"] = fullPath
                     semaphore.signal()
                 })
-                
+
                 semaphore.wait()
-                
+
                 self.images.append(libraryItem)
-                
+
 //                let imageSize = CGSize(width: asset.pixelWidth,
 //                                       height: asset.pixelHeight)
 //
@@ -177,19 +177,19 @@ final class PhotoLibraryService {
 //                                            print("enum for image, This is number 2")
 //
 //                })
-                
+
             }
         }
-        
+
         print("getPhotosFromAlbum 3");
-        
+
         return self.images;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 //    func addImgToArray(uploadImage:UIImage)
 //    {
 //        self.images.append(uploadImage)
@@ -249,7 +249,7 @@ final class PhotoLibraryService {
                 return
             }
 
-            let libraryItem = self.assetToLibraryItem(asset: asset, useOriginalFileNames: options.useOriginalFileNames, includeAlbumData: options.includeAlbumData)
+            let libraryItem = self.assetToLibraryItem(asset: asset, useOriginalFileNames: options.useOriginalFileNames, includeAlbumData: options.includeAlbumData, includeVideos: options.includeVideos)
 
             chunk.append(libraryItem)
 
@@ -344,7 +344,7 @@ final class PhotoLibraryService {
     }
 
 
-    private func assetToLibraryItem(asset: PHAsset, useOriginalFileNames: Bool, includeAlbumData: Bool) -> NSMutableDictionary {
+    private func assetToLibraryItem(asset: PHAsset, useOriginalFileNames: Bool, includeAlbumData: Bool, includeVideos: Bool) -> NSMutableDictionary {
         let libraryItem = NSMutableDictionary()
 
         libraryItem["id"] = asset.localIdentifier
@@ -361,6 +361,8 @@ final class PhotoLibraryService {
             libraryItem["longitude"] = location.coordinate.longitude
         }
 
+        if includeVideos {
+            libraryItem["isVideo"] = asset.mediaType.rawValue == 2 ? true : false
 
         if includeAlbumData {
             // This is pretty slow, use only when needed
@@ -633,7 +635,7 @@ final class PhotoLibraryService {
                         if fetchResult.count == 1 {
                             let asset = fetchResult.firstObject
                             if let asset = asset {
-                                libraryItem = self.assetToLibraryItem(asset: asset, useOriginalFileNames: false, includeAlbumData: true)
+                                libraryItem = self.assetToLibraryItem(asset: asset, useOriginalFileNames: false, includeAlbumData: true, includeVideos: true)
                             }
                         }
                         completion(libraryItem, nil)
@@ -649,14 +651,14 @@ final class PhotoLibraryService {
         }
         else{
             PhotoLibraryService.createPhotoAlbum(album) { (photoAlbum: PHAssetCollection?, error: String?) in
-                
+
                 guard let photoAlbum = photoAlbum else {
                     completion(nil, error)
                     return
                 }
-                
+
                 saveImage(photoAlbum)
-                
+
             }
         }
 
@@ -701,8 +703,8 @@ final class PhotoLibraryService {
                 }
 
                 self.putMediaToAlbum(assetsLibrary, url: assetUrl, album: album, completion: { (error) in
-  
-                    
+
+
                     if error != nil {
                         completion(nil, error)
                     } else {
@@ -711,7 +713,7 @@ final class PhotoLibraryService {
                         if fetchResult.count == 1 {
                             let asset = fetchResult.firstObject
                             if let asset = asset {
-                                libraryItem = self.assetToLibraryItem(asset: asset, useOriginalFileNames: false, includeAlbumData: true)
+                                libraryItem = self.assetToLibraryItem(asset: asset, useOriginalFileNames: false, includeAlbumData: true, includeVideos: true)
                             }
                         }
                         completion(libraryItem, nil)
