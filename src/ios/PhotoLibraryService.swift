@@ -363,7 +363,7 @@ final class PhotoLibraryService {
 
         if includeVideos {
             libraryItem["isVideo"] = asset.mediaType.rawValue == 2 ? true : false
-
+        }
         if includeAlbumData {
             // This is pretty slow, use only when needed
             var assetCollectionIds = [String]()
