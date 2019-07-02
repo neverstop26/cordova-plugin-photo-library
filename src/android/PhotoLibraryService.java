@@ -356,6 +356,7 @@ public class PhotoLibraryService {
         long chunkStartTime = SystemClock.elapsedRealtime();
         int chunkNum = 0;
 
+        // Get video files only if variable is set on init of plugin
 
         if(includeVideos){
             JSONObject columnsVideos = new JSONObject() {{
@@ -375,8 +376,11 @@ public class PhotoLibraryService {
                         queryResult.get("id") + ";" +
                                 queryResult.get("nativeURL"));
 
+                // Create bitmap thumbnail from video
                 Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(queryResult.getString("nativeURL"), MediaStore.Video.Thumbnails.MINI_KIND);
+                // Convert bitmap to URI
                 queryResult.put("thumbnailURL",bitmapToUriConverter(context,bitmap));
+                // Set variable for further determination of media type
                 queryResult.put("isVideo", true);
 
                 chunk.add(queryResult);

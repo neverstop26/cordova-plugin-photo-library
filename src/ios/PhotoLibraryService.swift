@@ -361,6 +361,9 @@ final class PhotoLibraryService {
             libraryItem["longitude"] = location.coordinate.longitude
         }
 
+        // Decide if the media is video or image
+        // Set dedicated variable to true for further determination of usage
+
         if includeVideos {
             libraryItem["isVideo"] = asset.mediaType.rawValue == 2 ? true : false
         }
