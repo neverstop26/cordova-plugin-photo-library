@@ -454,7 +454,6 @@ public class PhotoLibraryService {
             String realPath = file.getAbsolutePath();
             File f = new File(realPath);
             uri = Uri.fromFile(f);
-            System.err.println("Denke: " + uri);
 
         } catch (Exception e) {
             System.err.println("Your Error Message: " + e.getMessage());
@@ -554,7 +553,6 @@ public class PhotoLibraryService {
 
     // photoId is in format "imageid;imageurl;[swap]"
     private static String getImageURL(String photoId) {
-        System.err.println("Denke split: " + photoId);
         return photoId.split(";")[1];
     }
 
